@@ -57,8 +57,14 @@
     }
     this._started = false;
 
+    window.removeEventListener('hashchange', this);
+
     this.data = null;
     this.$selectors = [];
+  };
+
+  RepLocator.prototype.handleEvent = function(evt) {
+    this.updateLocationSelected(window.location.hash.substr(1));
   };
 
   RepLocator.prototype.handleDataReady = function() {
@@ -77,6 +83,7 @@
     this.data.getTopLevelNames().forEach(function(name) {
       var $o = $('<option />');
       $o.text(name);
+      $o.val(name);
       $selectors[0].append($o);
     }, this);
 
@@ -85,6 +92,31 @@
       .on('change', this.handle2ndLevelSelect.bind(this));
     $selectors[2].prop('disabled', true)
       .on('change', this.handle3ndLevelSelect.bind(this));
+
+    if (window.location.hash) {
+      this.updateLocationSelected(window.location.hash.substr(1));
+    }
+
+    window.addEventListener('hashchange', this);
+  };
+
+  RepLocator.prototype.updateLocationSelected = function(addressPrefix) {
+    var addressComponents = addressPrefix.split(',');
+
+    var $selectors = this.$selectors;
+    $selectors[0][0].selectedIndex =
+      $selectors[0].find('option[value="' + addressComponents[0] + '"]').index();
+    this.handleTopSelect();
+    if (addressComponents[1]) {
+      $selectors[1][0].selectedIndex =
+        $selectors[1].find('option[value="' + addressComponents[1] + '"]').index();
+    }
+    this.handle2ndLevelSelect();
+    if (addressComponents[2]) {
+      $selectors[2][0].selectedIndex =
+        $selectors[2].find('option[value="' + addressComponents[2] + '"]').index();
+    }
+    this.handle3ndLevelSelect();
   };
 
   RepLocator.prototype.handleTopSelect = function() {
@@ -110,6 +142,7 @@
     names.forEach(function(name) {
       var $o = $('<option />');
       $o.text(name);
+      $o.val(name);
       $selectors[1].append($o);
     }, this);
 
@@ -136,6 +169,7 @@
     names.forEach(function(name) {
       var $o = $('<option />');
       $o.text(name);
+      $o.val(name);
       $selectors[2].append($o);
     }, this);
 
@@ -166,6 +200,8 @@
     if (!reps) {
       return;
     }
+
+    window.location.hash = '#' + addressPrefix.join(',');
 
     reps.forEach(function(rep) {
       var $div = $('<div />');
