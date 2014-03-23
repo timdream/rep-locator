@@ -68,8 +68,17 @@
         return;
       }
 
-      this.app.updateLocationSelected(
-        data.address.state + ',' + data.address.state_district);
+      var addressPrefix = data.address.state || data.address.county;
+      if (data.address.state_district || data.address.city) {
+        addressPrefix +=
+          ',' + (data.address.state_district || data.address.city);
+      }
+      if (data.address.city_district) {
+        addressPrefix +=
+          ',' + data.address.city_district;
+      }
+
+      this.app.updateLocationSelected(addressPrefix);
     }.bind(this)).fail(function() {
 
     }.bind(this));
