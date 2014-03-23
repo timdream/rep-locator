@@ -172,7 +172,9 @@
       $div.html(
         '<h2 class="name"><img src="' + rep.avatar + '" />' + rep.name + '</h2>' +
         '<p class="constituency">' +
-          this.getConstituencyString(rep.constituency) + '</p>' +
+          this.getConstituencyString(rep.constituency) +
+          '（' + this.getLocalitiesStringFromConstituency(rep.constituency) + '）' +
+          '</p>' +
         '<p class="party">' +
           this.getPartyString(rep.party) + '</p>'
       );
@@ -222,6 +224,24 @@
         return result;
         break;
     }
+  };
+
+  RepLocator.prototype.getLocalitiesStringFromConstituency = function(constituency) {
+    var constituencyId = constituency.join(',');
+    var localities = this.data.constituency[constituencyId];
+
+    var str = localities[0].split(',').join('');
+    localities.forEach(function(locality, i) {
+      if (!i) {
+        return;
+      }
+      var arr = locality.split(',');
+      // Don't repeat the top level name on each item.
+      arr.shift();
+      str += '、' + arr.join('');
+    });
+
+    return str;
   };
 
   RepLocator.prototype.getPartyString = function (party) {
