@@ -72,7 +72,7 @@
   };
 
   RepLocator.prototype.handleEvent = function(evt) {
-    this.updateLocationSelected(window.location.hash.substr(1));
+    this.showRepFromHash();
   };
 
   RepLocator.prototype.handleDataReady = function() {
@@ -137,7 +137,7 @@
       $selectors[2].html('<option />');
       $selectors[2].prop('disabled', true);
 
-      this.showRepFromSelected();
+      this.updateHashFromSelected();
       return;
     }
 
@@ -156,7 +156,17 @@
       $selectors[1].append($o);
     }, this);
 
-    this.showRepFromSelected();
+    this.updateHashFromSelected();
+  };
+
+  RepLocator.prototype.updateHashFromSelected = function() {
+    var addressPrefix = [];
+    this.$selectors.forEach(function($selector) {
+      if ($selector.val()) {
+        addressPrefix.push($selector.val());
+      }
+    }, this);
+    window.location.hash = '#' + addressPrefix;
   };
 
   RepLocator.prototype.handle2ndLevelSelect = function() {
@@ -165,7 +175,7 @@
       $selectors[2].html('<option />');
       $selectors[2].prop('disabled', true);
 
-      this.showRepFromSelected();
+      this.updateHashFromSelected();
       return;
     }
 
@@ -183,24 +193,19 @@
       $selectors[2].append($o);
     }, this);
 
-    this.showRepFromSelected();
+    this.updateHashFromSelected();
   };
 
   RepLocator.prototype.handle3ndLevelSelect = function() {
     var $selectors = this.$selectors;
 
-    this.showRepFromSelected();
+    this.updateHashFromSelected();
   };
 
-  RepLocator.prototype.showRepFromSelected = function() {
-    var addressPrefix = [];
-    this.$selectors.forEach(function($selector) {
-      if ($selector.val()) {
-        addressPrefix.push($selector.val());
-      }
-    }, this);
+  RepLocator.prototype.showRepFromHash = function() {
+    var addressPrefix = window.location.hash.substr(1);
 
-    var reps = this.data.getRepsFromAddressPrefix(addressPrefix.join(','));
+    var reps = this.data.getRepsFromAddressPrefix(addressPrefix);
 
     var $container =
       $(document.getElementById(this.REPS_CONTAINER_ID));
@@ -210,8 +215,6 @@
     if (!reps) {
       return;
     }
-
-    window.location.hash = '#' + addressPrefix.join(',');
 
     reps.forEach(function(rep) {
       var $div = $('<div />');
