@@ -7,8 +7,7 @@
 
     this.mly = null;
     this.constituency = null;
-    this.repByAddressPrefixes = null;
-    this.localities = null;
+    this.repByLocalities = null;
   };
 
   RepData.prototype.onready = null;
@@ -34,8 +33,7 @@
 
     this.mly = null;
     this.constituency = null;
-    this.repByAddressPrefixes = null;
-    this.localities = null;
+    this.repByLocalities = null;
   };
 
   RepData.prototype.getRepData = function() {
@@ -87,22 +85,24 @@
 
   RepData.prototype.constructRepData = function() {
     this.repByAddressPrefixes = {};
-    this.localities = {};
-    var i, rep, topLevelName, locality;
+    this.repByLocalities = {};
+    var i, j, rep, currentDict;
     for (var key in this.constituency) {
       for (i = 0; i < this.constituency[key].length; i++) {
         if (!(this.constituency[key][i] in this.repByAddressPrefixes)) {
            this.repByAddressPrefixes[this.constituency[key][i]] = [];
         }
 
-        var names = this.constituency[key][i].split(',');
-        var topLevelName = names[0];
-        if (!(topLevelName in this.localities)) {
-          this.localities[topLevelName] = [];
+        var addressComponents = this.constituency[key][i].split(',');
+        var currentDict = this.repByLocalities;
+        for (j = 0; j < addressComponents.length; j++) {
+          if (!(addressComponents[j] in currentDict)) {
+            currentDict[addressComponents[j]] = {};
+          }
+          currentDict = currentDict[addressComponents[j]];
         }
-        var locality = names[1];
-        if (this.localities[topLevelName].indexOf(locality) === -1) {
-          this.localities[topLevelName].push(locality);
+        if (!('_reps' in currentDict)) {
+          currentDict._reps = [];
         }
 
         rep = this.getRepByConstituency(key);
@@ -110,7 +110,7 @@
           throw 'constituency.json contains incorrect key: ' + key;
         }
 
-        this.repByAddressPrefixes[this.constituency[key][i]].push(rep);
+        currentDict._reps.push(rep);
       }
     }
   };
@@ -134,15 +134,23 @@
       throw 'Not ready.';
     }
 
-    if (this.repByAddressPrefixes[addressPrefix]) {
-      return this.repByAddressPrefixes[addressPrefix];
+    var addressComponents = addressPrefix.split(',');
+    var currentDict = this.repByLocalities;
+    var reps = null;
+    for (var i = 0; i < addressComponents.length; i++) {
+      if (!(addressComponents[i] in currentDict)) {
+        if (!reps) {
+          return false;
+        }
+        return reps;
+      }
+      currentDict = currentDict[addressComponents[i]];
+      if ('_reps' in currentDict) {
+        reps = currentDict._reps;
+      }
     }
 
-    if (this.repByAddressPrefixes[addressPrefix.substr(0, 4)]) {
-      return this.repByAddressPrefixes[addressPrefix.substr(0, 4)];
-    }
-
-    return false;
+    return reps || false;
   };
 
   RepData.prototype.getTopLevelNames = function() {
@@ -150,11 +158,28 @@
       throw 'Not ready.';
     }
 
-    return Object.keys(this.localities);
+    return Object.keys(this.repByLocalities);
   };
 
-  RepData.prototype.getLocalitiesFromTopLevelName = function(topLevelName) {
-    return this.localities[topLevelName];
+  RepData.prototype.getLocalitiesFromAddressPrefix = function(addressPrefix) {
+    if (!this.ready) {
+      throw 'Not ready.';
+    }
+
+    var addressComponents = addressPrefix.split(',');
+    var currentDict = this.repByLocalities;
+    for (var i = 0; i < addressComponents.length; i++) {
+      if (!(addressComponents[i] in currentDict)) {
+        return undefined;
+      }
+      currentDict = currentDict[addressComponents[i]];
+    }
+
+    if ('_reps' in currentDict) {
+      return [];
+    }
+
+    return Object.keys(currentDict);
   };
 
   exports.RepData = RepData;

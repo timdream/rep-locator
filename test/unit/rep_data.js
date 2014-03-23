@@ -167,10 +167,10 @@ test('getTopLevelNames', function() {
   stop();
 });
 
-test('getLocalitiesFromTopLevelName', function() {
+test('getLocalitiesFromAddressPrefix', function() {
   var data = new RepData();
   data.onready = function() {
-    var localties = data.getLocalitiesFromTopLevelName('台北市');
+    var localties = data.getLocalitiesFromAddressPrefix('台北市');
 
     deepEqual(localties, [
       '北投區',
@@ -194,10 +194,10 @@ test('getLocalitiesFromTopLevelName', function() {
   stop();
 });
 
-test('getLocalitiesFromTopLevelName (invalid name)', function() {
+test('getLocalitiesFromAddressPrefix (invalid name)', function() {
   var data = new RepData();
   data.onready = function() {
-    var localties = data.getLocalitiesFromTopLevelName('高壇市');
+    var localties = data.getLocalitiesFromAddressPrefix('高壇市');
 
     deepEqual(localties, undefined, 'Is undefined.');
     data.stop();
@@ -208,12 +208,12 @@ test('getLocalitiesFromTopLevelName (invalid name)', function() {
   stop();
 });
 
-test('getLocalitiesFromTopLevelName (constituency is the entire top level)', function() {
+test('getLocalitiesFromAddressPrefix (constituency is the entire top level)', function() {
   var data = new RepData();
   data.onready = function() {
-    var localties = data.getLocalitiesFromTopLevelName('宜蘭縣');
+    var localties = data.getLocalitiesFromAddressPrefix('宜蘭縣');
 
-    deepEqual(localties, [''], 'Is an array with empty string.');
+    deepEqual(localties, [], 'Is an empty array.');
     data.stop();
 
     start();
