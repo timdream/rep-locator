@@ -7,6 +7,7 @@
 
     this.data = null;
     this.$selectors = [];
+    this.locationResolver = null;
   }
 
   RepLocator.prototype.ISO3166TW_CODE = {
@@ -25,13 +26,13 @@
     'PEN': '澎湖縣',
     'PIF': '屏東縣',
     'TAO': '桃園縣',
-    'TNN': '台南市',
-    'TNQ': '台南市',
-    'TPE': '台北市',
+    'TNN': '臺南市',
+    'TNQ': '臺南市',
+    'TPE': '臺北市',
     'TPQ': '新北市',
-    'TTT': '台東縣',
-    'TXG': '台中市',
-    'TXQ': '台中市',
+    'TTT': '臺東縣',
+    'TXG': '臺中市',
+    'TXQ': '臺中市',
     'YUN': '雲林縣',
     'JME': '金門縣',
     'LJF': '連江縣'
@@ -49,6 +50,9 @@
     var data = this.data = new RepData();
     data.onready = this.handleDataReady.bind(this);
     data.start();
+
+    this.locationResolver = new LocationResolver(this);
+    this.locationResolver.start();
   };
 
   RepLocator.prototype.stop = function hb_stop() {
@@ -58,9 +62,13 @@
     this._started = false;
 
     window.removeEventListener('hashchange', this);
-
-    this.data = null;
     this.$selectors = [];
+
+    this.data.stop();
+    this.data = null;
+
+    this.locationResolver.stop();
+    this.locationResolver = null;
   };
 
   RepLocator.prototype.handleEvent = function(evt) {
@@ -98,6 +106,8 @@
     }
 
     window.addEventListener('hashchange', this);
+
+    this.locationResolver.enableButton();
   };
 
   RepLocator.prototype.updateLocationSelected = function(addressPrefix) {
