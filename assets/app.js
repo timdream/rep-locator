@@ -247,7 +247,7 @@
     reps.forEach(function(rep) {
       var $div = $('<div class="rep thumbnail media" />');
       $div.html(
-        '<div class="pull-left"><img src="' + rep.avatar + '?size=large" /></div>' +
+        '<div class="pull-left"><img src="' + rep.image + '?size=large" /></div>' +
         '<div class="media-body">' +
         '<h2 class="name media-heading">' + rep.name + '</h2>' +
         '<p><span class="constituency">' +
@@ -258,14 +258,14 @@
         '<hr />' +
         '</div>'
       );
-      if (Object.keys(rep.contact).length) {
+      if (Object.keys(rep.contacts).length) {
         $div.find('.media-body').append('<h3 class="sr-only">聯絡資訊</h3>');
       }
 
-      $.each(rep.contact, function (key, val) {
+      $.each(rep.contacts, function (key, val) {
         var key = $.trim(key);
         if (key) {
-          var html = '<div class="contact"><h4>' + key + '</h4>';
+          var html = '<div class="contact"><h4>' + val['name'] + '</h4>';
           if (val['phone'] != undefined) {
               html += '<p>電話：<a href="tel:' + val['phone'] + '">' + val['phone'] + '</a></p>';
           }
