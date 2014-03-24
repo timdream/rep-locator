@@ -247,7 +247,8 @@
     reps.forEach(function(rep) {
       var $div = $('<div class="rep thumbnail media" />');
       $div.html(
-        '<div class="pull-left"><img src="' + rep.image + '?size=large" /></div>' +
+        '<div class="pull-left text-center"><p><img src="' + rep.image + '?size=large" /></p>' +
+        '<p><a class="btn btn-primary" href="http://vote.ly.g0v.tw/legislator/biller/' + rep.id + '" target="_blank">提案、投票紀錄</a></p></div>' +
         '<div class="media-body">' +
         '<h2 class="name media-heading">' + rep.name + '</h2>' +
         '<p><span class="constituency">' +
