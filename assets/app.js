@@ -38,7 +38,7 @@
     'LJF': '連江縣'
   };
 
-  RepLocator.prototype.ADDRESS_SELECTOR_CONTAINER_ID = 'address-selector';
+  RepLocator.prototype.ADDRESS_SELECTOR_ID_PREFIX = 'address-selector';
   RepLocator.prototype.REPS_CONTAINER_ID = 'reps';
 
   RepLocator.prototype.start = function() {
@@ -53,6 +53,8 @@
 
     this.locationResolver = new LocationResolver(this);
     this.locationResolver.start();
+
+    this.titlePrefix = window.document.title;
   };
 
   RepLocator.prototype.stop = function hb_stop() {
@@ -69,6 +71,8 @@
 
     this.locationResolver.stop();
     this.locationResolver = null;
+
+    window.document.title = this.titlePrefix;
   };
 
   RepLocator.prototype.handleEvent = function(evt) {
@@ -76,16 +80,13 @@
   };
 
   RepLocator.prototype.handleDataReady = function() {
-    var $container =
-      $(document.getElementById(this.ADDRESS_SELECTOR_CONTAINER_ID));
     var $selectors = this.$selectors;
 
     var $selector;
     for (var i = 0; i < 3; i++) {
-      $selector = $('<select />');
+      $selector = $('#' + this.ADDRESS_SELECTOR_ID_PREFIX + i);
       $selector.append('<option />');
       $selectors.push($selector);
-      $container.append($selector);
     }
 
     this.data.getTopLevelNames().forEach(function(name) {
@@ -95,7 +96,8 @@
       $selectors[0].append($o);
     }, this);
 
-    $selectors[0].on('change', this.handleTopSelect.bind(this));
+    $selectors[0].prop('disabled', false)
+      .on('change', this.handleTopSelect.bind(this));
     $selectors[1].prop('disabled', true)
       .on('change', this.handle2ndLevelSelect.bind(this));
     $selectors[2].prop('disabled', true)
@@ -166,7 +168,12 @@
         addressPrefix.push($selector.val());
       }
     }, this);
-    window.location.hash = '#' + addressPrefix;
+    window.location.hash = '#' + addressPrefix.join(',');
+    if (addressPrefix.length) {
+      window.document.title = this.titlePrefix + '：' + addressPrefix.join('');
+    } else {
+      window.document.title = this.titlePrefix;
+    }
   };
 
   RepLocator.prototype.handle2ndLevelSelect = function() {
@@ -213,13 +220,16 @@
     $container.html('');
 
     if (!reps) {
+      document.body.classList.remove('has-reps');
       return;
     }
+
+    document.body.classList.add('has-reps');
 
     reps.forEach(function(rep) {
       var $div = $('<div />');
       $div.html(
-        '<h2 class="name"><img src="' + rep.avatar + '" />' + rep.name + '</h2>' +
+        '<h2 class="name"><img src="' + rep.avatar + '?size=large" />' + rep.name + '</h2>' +
         '<p class="constituency">' +
           this.getConstituencyString(rep.constituency) +
           '（' + this.getLocalitiesStringFromConstituency(rep.constituency) + '）' +
@@ -235,7 +245,7 @@
               html += '<p>電話：<a href="tel:' + val['phone'] + '">' + val['phone'] + '</a></p>';
           }
           if (val['address'] != undefined) {
-              html += '<p>地址：<a href="http://maps.google.com.tw/?q=' + val['address'] + '">' + val['address'] + '</a></p>';
+              html += '<p>地址：<a href="https://maps.google.com.tw/?q=' + val['address'] + '">' + val['address'] + '</a></p>';
           }
           if (val['fax'] != undefined) {
               html += '<p>傳真：<a href="fax:' + val['fax'] + '">' + val['fax'] + '</a></p>';

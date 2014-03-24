@@ -2,6 +2,7 @@
 <html lang="zh-TW">
   <head>
   <meta charset="utf-8">
+  <title>尋找你的民意代表</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
@@ -20,6 +21,58 @@
     }
 
   </script>
+  <style type="text/css">
+    body:lang(zh-tw) {
+      font-size: 15px;
+    }
+
+    @-webkit-keyframes rotate {
+      0% {
+        -webkit-transform: rotate(0);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #looking-up-location {
+      display: none;
+    }
+
+    .loading #looking-up-location {
+      display: inline-block;
+
+      -webkit-animation: rotate 1s linear infinite;
+      animation: rotate 1s linear infinite;
+
+      margin-left: 10px;
+      vertical-align: -1px;
+    }
+
+    body:not(.has-reps) #locate-me-block {
+      margin: 200px 0 100px 0;
+      margin: 30vh 0 30vh 0;
+    }
+    body:not(.has-reps) #locate-me-block > button {
+      --webkit-transform: scale(2);
+      transform: scale(2);
+    }
+
+    @media (min-width: 786px) {
+      .address-selector {
+        width: 140px;
+      }
+    }
+  </style>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" defer></script>
   <script type="text/javascript" src="assets/rep_data.js" defer></script>
   <script type="text/javascript" src="assets/location_resolver.js" defer></script>
@@ -27,8 +80,28 @@
   <script type="text/javascript" src="assets/start.js" defer></script>
 </head>
 <body>
-  <div id="address-selector"></div>
-  <button id="locate-me" disabled>立刻定位</button>
-  <div id="reps"></div>
+  <div class="container">
+    <h1 class="text-center">投完票就忘了嗎？立刻尋找你的選區立委</h1>
+    <form class="form-inline" role="form">
+      <p class="text-center">
+        <span class="form-group">
+          <label class="sr-only" for="address-selector0">縣市</label>
+          <select id="address-selector0" disabled class="address-selector form-control input-lg" title="縣市"></select>
+        </span>
+        <span class="form-group">
+          <label class="sr-only" for="address-selector1">鄉鎮市區</label>
+          <select id="address-selector1" disabled class="address-selector form-control input-lg" title="鄉鎮市區"></select>
+        </span>
+        <span class="form-group">
+          <label class="sr-only" for="address-selector2">村里</label>
+          <select id="address-selector2" disabled class="address-selector form-control input-lg" title="村里"></select>
+        </span>
+      </p>
+    </form>
+
+    <p id="locate-me-block" class="text-center"><button class="btn btn-info btn-lg" id="locate-me" disabled>定位所在位置<span id="looking-up-location" class="glyphicon glyphicon-refresh"></span></button></p>
+
+    <div id="reps"></div>
+  </div>
 </body>
 </html>

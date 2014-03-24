@@ -7,7 +7,7 @@
   }
 
   LocationResolver.prototype.LOCATE_ME_BUTTON_ID = 'locate-me';
-  LocationResolver.prototype.LOOKUP_URL = 'http://nominatim.openstreetmap.org/reverse?json_callback=?';
+  LocationResolver.prototype.LOOKUP_URL = 'https://nominatim.openstreetmap.org/reverse?json_callback=?';
 
   LocationResolver.prototype.start = function() {
     if (this._started) {
@@ -35,7 +35,7 @@
   };
 
   LocationResolver.prototype.locateCurrentLocality = function() {
-    this.$button.addClass('loading');
+    this.$button.addClass('loading').prop('disabled', true);
 
     navigator.geolocation.getCurrentPosition(function success(pos) {
       if (!this._started) {
@@ -44,7 +44,7 @@
 
       this.lookupCoords(pos.coords);
     }.bind(this), function error() {
-      this.$button.removeClass('loading');
+      this.$button.removeClass('loading').prop('disabled', false);
     }.bind(this), {
       timeout: 20 * 1E3
     });
@@ -62,7 +62,7 @@
         return;
       }
 
-      this.$button.removeClass('loading');
+      this.$button.removeClass('loading').prop('disabled', false);
 
       if (!data || !data.address || data.address.country_code !== 'tw') {
         return;
@@ -80,7 +80,7 @@
 
       this.app.updateLocationSelected(addressPrefix);
     }.bind(this)).fail(function() {
-
+      this.$button.removeClass('loading').prop('disabled', false);
     }.bind(this));
   };
 
