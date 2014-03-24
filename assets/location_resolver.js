@@ -78,7 +78,7 @@
           ',' + data.address.city_district;
       }
 
-      this.app.updateLocationSelected(addressPrefix);
+      this.app.updateLocation(addressPrefix);
     }.bind(this)).fail(function() {
       this.$button.removeClass('loading').prop('disabled', false);
     }.bind(this));

@@ -153,6 +153,28 @@
     return reps || false;
   };
 
+  RepData.prototype.getValidAddressPrefix = function(addressPrefix) {
+    if (!this.ready) {
+      throw 'Not ready.';
+    }
+
+    var addressComponents = addressPrefix.split(',');
+    var currentDict = this.repByLocalities;
+    var validAddressComponents = [];
+    for (var i = 0; i < addressComponents.length; i++) {
+      if (!(addressComponents[i] in currentDict)) {
+        if (!validAddressComponents.length) {
+          return false;
+        }
+        return validAddressComponents.join(',');
+      }
+      currentDict = currentDict[addressComponents[i]];
+      validAddressComponents.push(addressComponents[i]);
+    }
+
+    return validAddressComponents.join(',') || false;
+  };
+
   RepData.prototype.getTopLevelNames = function() {
     if (!this.ready) {
       throw 'Not ready.';

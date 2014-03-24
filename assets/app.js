@@ -77,6 +77,7 @@
 
   RepLocator.prototype.handleEvent = function(evt) {
     this.showRepFromHash();
+    this.updateSelectedFromHash();
   };
 
   RepLocator.prototype.handleDataReady = function() {
@@ -104,7 +105,8 @@
       .on('change', this.handle3ndLevelSelect.bind(this));
 
     if (window.location.hash) {
-      this.updateLocationSelected(window.location.hash.substr(1));
+      this.showRepFromHash();
+      this.updateSelectedFromHash();
     }
 
     window.addEventListener('hashchange', this);
@@ -112,26 +114,32 @@
     this.locationResolver.enableButton();
   };
 
-  RepLocator.prototype.updateLocationSelected = function(addressPrefix) {
+  RepLocator.prototype.updateLocation = function(addressPrefix) {
+    var validAddressPrefix = this.data.getValidAddressPrefix(addressPrefix);
+    window.location.hash = '#' + validAddressPrefix;
+  };
+
+  RepLocator.prototype.updateSelectedFromHash = function() {
+    var addressPrefix = window.location.hash.substr(1);
     var addressComponents = addressPrefix.split(',');
 
     var $selectors = this.$selectors;
     $selectors[0][0].selectedIndex =
       $selectors[0].find('option[value="' + addressComponents[0] + '"]').index();
-    this.handleTopSelect();
+    this.handleTopSelect(false);
     if (addressComponents[1]) {
       $selectors[1][0].selectedIndex =
         $selectors[1].find('option[value="' + addressComponents[1] + '"]').index();
     }
-    this.handle2ndLevelSelect();
+    this.handle2ndLevelSelect(false);
     if (addressComponents[2]) {
       $selectors[2][0].selectedIndex =
         $selectors[2].find('option[value="' + addressComponents[2] + '"]').index();
     }
-    this.handle3ndLevelSelect();
+    this.handle3ndLevelSelect(false);
   };
 
-  RepLocator.prototype.handleTopSelect = function() {
+  RepLocator.prototype.handleTopSelect = function(updateHash) {
     var $selectors = this.$selectors;
     if (!$selectors[0].val()) {
       $selectors[1].html('<option />');
@@ -139,7 +147,9 @@
       $selectors[2].html('<option />');
       $selectors[2].prop('disabled', true);
 
-      this.updateHashFromSelected();
+      if (updateHash) {
+        this.updateHashFromSelected();
+      }
       return;
     }
 
@@ -158,7 +168,9 @@
       $selectors[1].append($o);
     }, this);
 
-    this.updateHashFromSelected();
+    if (updateHash) {
+      this.updateHashFromSelected();
+    }
   };
 
   RepLocator.prototype.updateHashFromSelected = function() {
@@ -176,13 +188,15 @@
     }
   };
 
-  RepLocator.prototype.handle2ndLevelSelect = function() {
+  RepLocator.prototype.handle2ndLevelSelect = function(updateHash) {
     var $selectors = this.$selectors;
     if (!$selectors[1].val()) {
       $selectors[2].html('<option />');
       $selectors[2].prop('disabled', true);
 
-      this.updateHashFromSelected();
+      if (updateHash) {
+        this.updateHashFromSelected();
+      }
       return;
     }
 
@@ -200,13 +214,17 @@
       $selectors[2].append($o);
     }, this);
 
-    this.updateHashFromSelected();
+    if (updateHash) {
+      this.updateHashFromSelected();
+    }
   };
 
-  RepLocator.prototype.handle3ndLevelSelect = function() {
+  RepLocator.prototype.handle3ndLevelSelect = function(updateHash) {
     var $selectors = this.$selectors;
 
-    this.updateHashFromSelected();
+    if (updateHash) {
+      this.updateHashFromSelected();
+    }
   };
 
   RepLocator.prototype.showRepFromHash = function() {
@@ -332,20 +350,3 @@
 
   exports.RepLocator = RepLocator;
 }(window));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
