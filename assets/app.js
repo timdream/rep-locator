@@ -245,20 +245,27 @@
     document.body.classList.add('has-reps');
 
     reps.forEach(function(rep) {
-      var $div = $('<div />');
+      var $div = $('<div class="rep thumbnail media" />');
       $div.html(
-        '<h2 class="name"><img src="' + rep.avatar + '?size=large" />' + rep.name + '</h2>' +
-        '<p class="constituency">' +
+        '<div class="pull-left"><img src="' + rep.avatar + '?size=large" /></div>' +
+        '<div class="media-body">' +
+        '<h2 class="name media-heading">' + rep.name + '</h2>' +
+        '<p><span class="constituency">' +
           this.getConstituencyString(rep.constituency) +
-          '（' + this.getLocalitiesStringFromConstituency(rep.constituency) + '）' +
-          '</p>' +
-        '<p class="party">' +
-          this.getPartyString(rep.party) + '</p>'
+          '（' + this.getLocalitiesStringFromConstituency(rep.constituency) + '）／' +
+        '</span>' +
+        '<span class="party">' + this.getPartyString(rep.party) + '</span></p>' +
+        '<hr />' +
+        '</div>'
       );
+      if (Object.keys(rep.contact).length) {
+        $div.find('.media-body').append('<h3 class="sr-only">聯絡資訊</h3>');
+      }
+
       $.each(rep.contact, function (key, val) {
         var key = $.trim(key);
         if (key) {
-          var html = '<div class="contact"><h3>' + key + '</h3>';
+          var html = '<div class="contact"><h4>' + key + '</h4>';
           if (val['phone'] != undefined) {
               html += '<p>電話：<a href="tel:' + val['phone'] + '">' + val['phone'] + '</a></p>';
           }
@@ -268,7 +275,7 @@
           if (val['fax'] != undefined) {
               html += '<p>傳真：<a href="fax:' + val['fax'] + '">' + val['fax'] + '</a></p>';
           }
-          $div.append(html);
+          $div.find('.media-body').append(html);
         }
       });
 
