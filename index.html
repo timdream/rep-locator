@@ -58,18 +58,26 @@
       vertical-align: -1px;
     }
 
-    body:not(.has-reps) #locate-me-block {
-      margin: 200px 0 100px 0;
-      margin: 30vh 0 30vh 0;
-    }
     body:not(.has-reps) #locate-me-block > button {
-      --webkit-transform: scale(2);
+      -webkit-transform: scale(2);
       transform: scale(2);
+      margin: 2em 0;
     }
 
-    @media (min-width: 786px) {
+    @media (min-width: 768px) {
       .address-selector {
         width: 140px;
+      }
+
+      body:not(.has-reps) #locate-me-block {
+        margin: 200px 0 100px 0;
+        margin: 25vh 0 25vh 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .pull-left {
+        float: none !important;
       }
     }
 
