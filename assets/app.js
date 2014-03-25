@@ -270,7 +270,7 @@
                 html += '<p>電話：<a href="tel:' + val['phone'] + '">' + val['phone'] + '</a></p>';
             }
             if (val['address'] != undefined) {
-                html += '<p>地址：<a href="https://maps.google.com.tw/?q=' + val['address'] + '">' + val['address'] + '</a></p>';
+                html += '<p>地址：<a target="_blank" href="https://maps.google.com.tw/?q=' + val['address'] + '">' + val['address'] + '</a></p>';
             }
             if (val['fax'] != undefined) {
                 html += '<p>傳真：<a href="fax:' + val['fax'] + '">' + val['fax'] + '</a></p>';
