@@ -104,7 +104,7 @@
     $selectors[2].prop('disabled', true)
       .on('change', this.handle3ndLevelSelect.bind(this));
 
-    if (window.location.hash) {
+    if (window.location.hash.substr(1)) {
       this.showRepFromHash();
       this.updateSelectedFromHash();
     }
@@ -116,11 +116,11 @@
 
   RepLocator.prototype.updateLocation = function(addressPrefix) {
     var validAddressPrefix = this.data.getValidAddressPrefix(addressPrefix);
-    window.location.hash = '#' + validAddressPrefix;
+    window.location.hash = '#' + window.encodeURI(validAddressPrefix);
   };
 
   RepLocator.prototype.updateSelectedFromHash = function() {
-    var addressPrefix = window.location.hash.substr(1);
+    var addressPrefix = window.decodeURI(window.location.hash.substr(1));
     var addressComponents = addressPrefix.split(',');
 
     if (addressComponents.length) {
@@ -186,7 +186,7 @@
         addressComponents.push($selector.val());
       }
     }, this);
-    window.location.hash = '#' + addressComponents.join(',');
+    this.updateLocation(addressComponents.join(','));
   };
 
   RepLocator.prototype.handle2ndLevelSelect = function(updateHash) {
@@ -229,7 +229,7 @@
   };
 
   RepLocator.prototype.showRepFromHash = function() {
-    var addressPrefix = window.location.hash.substr(1);
+    var addressPrefix = window.decodeURI(window.location.hash.substr(1));
 
     var reps = this.data.getRepsFromAddressPrefix(addressPrefix);
 
