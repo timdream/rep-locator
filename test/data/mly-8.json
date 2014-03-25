@@ -1,0 +1,23 @@
+[
+    {
+        "name": "rep-name-AAA-1",
+        "constituency": [
+            "AAA",
+            1
+        ]
+    },
+    {
+        "name": "rep-name-AAA-2",
+        "constituency": [
+            "AAA",
+            2
+        ]
+    },
+    {
+        "name": "rep-name-BBB-2",
+        "constituency": [
+            "BBB",
+            0
+        ]
+    }
+]
