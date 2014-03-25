@@ -260,26 +260,27 @@
         '<hr />' +
         '</div>'
       );
-      if (Object.keys(rep.contacts).length) {
+      if (rep.contacts && rep.contacts.length) {
         $div.find('.media-body').append('<h3 class="sr-only">聯絡資訊</h3>');
+        $.each(rep.contacts, function (key, val) {
+          var key = $.trim(key);
+          if (key) {
+            var html = '<div class="contact"><h4>' + val['name'] + '</h4>';
+            if (val['phone'] != undefined) {
+                html += '<p>電話：<a href="tel:' + val['phone'] + '">' + val['phone'] + '</a></p>';
+            }
+            if (val['address'] != undefined) {
+                html += '<p>地址：<a href="https://maps.google.com.tw/?q=' + val['address'] + '">' + val['address'] + '</a></p>';
+            }
+            if (val['fax'] != undefined) {
+                html += '<p>傳真：<a href="fax:' + val['fax'] + '">' + val['fax'] + '</a></p>';
+            }
+            $div.find('.media-body').append(html);
+          }
+        });
+      } else {
+        $div.find('.media-body').append('<h3 class="">無聯絡資訊</h3>');
       }
-
-      $.each(rep.contacts, function (key, val) {
-        var key = $.trim(key);
-        if (key) {
-          var html = '<div class="contact"><h4>' + val['name'] + '</h4>';
-          if (val['phone'] != undefined) {
-              html += '<p>電話：<a href="tel:' + val['phone'] + '">' + val['phone'] + '</a></p>';
-          }
-          if (val['address'] != undefined) {
-              html += '<p>地址：<a href="https://maps.google.com.tw/?q=' + val['address'] + '">' + val['address'] + '</a></p>';
-          }
-          if (val['fax'] != undefined) {
-              html += '<p>傳真：<a href="fax:' + val['fax'] + '">' + val['fax'] + '</a></p>';
-          }
-          $div.find('.media-body').append(html);
-        }
-      });
 
       $container.append($div);
     }, this);
