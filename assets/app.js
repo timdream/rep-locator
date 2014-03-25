@@ -123,6 +123,12 @@
     var addressPrefix = window.location.hash.substr(1);
     var addressComponents = addressPrefix.split(',');
 
+    if (addressComponents.length) {
+      window.document.title = this.titlePrefix + '：' + addressComponents.join('');
+    } else {
+      window.document.title = this.titlePrefix;
+    }
+
     var $selectors = this.$selectors;
     $selectors[0][0].selectedIndex =
       $selectors[0].find('option[value="' + addressComponents[0] + '"]').index();
@@ -174,18 +180,13 @@
   };
 
   RepLocator.prototype.updateHashFromSelected = function() {
-    var addressPrefix = [];
+    var addressComponents = [];
     this.$selectors.forEach(function($selector) {
       if ($selector.val()) {
-        addressPrefix.push($selector.val());
+        addressComponents.push($selector.val());
       }
     }, this);
-    window.location.hash = '#' + addressPrefix.join(',');
-    if (addressPrefix.length) {
-      window.document.title = this.titlePrefix + '：' + addressPrefix.join('');
-    } else {
-      window.document.title = this.titlePrefix;
-    }
+    window.location.hash = '#' + addressComponents.join(',');
   };
 
   RepLocator.prototype.handle2ndLevelSelect = function(updateHash) {
