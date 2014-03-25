@@ -14,6 +14,8 @@
 
   RepData.prototype.DATA_PATH = './data/';
 
+  RepData.prototype.GET_ALL_REPS_AT_LEVEL = 1;
+
   RepData.prototype.start = function() {
     if (this._started) {
       throw 'Instance should not be start()\'ed twice.';
@@ -137,17 +139,38 @@
     var addressComponents = addressPrefix.split(',');
     var currentDict = this.repByLocalities;
     var reps = null;
+    var getAllRepsWithinDict = function(dict) {
+      for (var key in dict) {
+        if (key === '_reps') {
+          dict._reps.forEach(function(rep) {
+            if (reps.indexOf(rep) === -1) {
+              reps.push(rep);
+            }
+          });
+        } else {
+          getAllRepsWithinDict(dict[key]);
+        }
+      }
+    };
+
     for (var i = 0; i < addressComponents.length; i++) {
       if (!(addressComponents[i] in currentDict)) {
-        if (!reps) {
-          return false;
+        if (!reps && i > this.GET_ALL_REPS_AT_LEVEL) {
+          reps = [];
+          getAllRepsWithinDict(currentDict);
         }
-        return reps;
+
+        return reps || false;
       }
       currentDict = currentDict[addressComponents[i]];
       if ('_reps' in currentDict) {
         reps = currentDict._reps;
       }
+    }
+
+    if (!reps && addressComponents.length > this.GET_ALL_REPS_AT_LEVEL) {
+      reps = [];
+      getAllRepsWithinDict(currentDict);
     }
 
     return reps || false;

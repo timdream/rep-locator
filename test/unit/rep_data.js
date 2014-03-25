@@ -24,6 +24,22 @@ var expected2 = {
     ]
 };
 
+var expected3 = {
+    "name": "rep-name-CCC-2",
+    "constituency": [
+        "CCC",
+        1
+    ]
+};
+
+var expected4 = {
+    "name": "rep-name-CCC-2",
+    "constituency": [
+        "CCC",
+        2
+    ]
+};
+
 test('getRepByConstituency', function() {
   var data = new RepData();
   data.onready = function() {
@@ -80,6 +96,62 @@ test('getRepsFromAddressPrefix (too precise)', function() {
   stop();
 });
 
+test('getRepsFromAddressPrefix (get all reps with level 2 locality)', function() {
+  var data = new RepData();
+  data.onready = function() {
+    var reps = data.getRepsFromAddressPrefix('CCCCCC,bbbbbb');
+
+    deepEqual(reps, [expected3, expected4], 'Find the right reps.');
+    data.stop();
+
+    start();
+  };
+  data.start();
+  stop();
+});
+
+test('getRepsFromAddressPrefix (get all reps with level 2 locality with unrecognized level 3)', function() {
+  var data = new RepData();
+  data.onready = function() {
+    var reps = data.getRepsFromAddressPrefix('CCCCCC,bbbbbb,333333');
+
+    deepEqual(reps, [expected3, expected4], 'Find the right reps.');
+    data.stop();
+
+    start();
+  };
+  data.start();
+  stop();
+});
+
+test('getRepsFromAddressPrefix (don\'t get all reps with level 1 locality)', function() {
+  var data = new RepData();
+  data.onready = function() {
+    var reps = data.getRepsFromAddressPrefix('CCCCCC');
+
+    deepEqual(reps, false, 'Don\'t resolve.');
+    data.stop();
+
+    start();
+  };
+  data.start();
+  stop();
+});
+
+test('getRepsFromAddressPrefix (don\'t get all reps with invalid names)', function() {
+  var data = new RepData();
+  data.onready = function() {
+    var reps = data.getRepsFromAddressPrefix('XXXXXX,aaaaaa');
+
+    deepEqual(reps, false, 'Don\'t resolve.');
+    data.stop();
+
+    start();
+  };
+  data.start();
+  stop();
+});
+
 test('getTopLevelNames', function() {
   var data = new RepData();
   data.onready = function() {
@@ -87,7 +159,8 @@ test('getTopLevelNames', function() {
 
     deepEqual(topLevelNames, [
       'AAAAAA',
-      'BBBBBB'
+      'BBBBBB',
+      'CCCCCC'
     ], 'Has all places.');
     data.stop();
 

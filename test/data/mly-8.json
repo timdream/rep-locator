@@ -19,5 +19,19 @@
             "BBB",
             0
         ]
+    },
+    {
+        "name": "rep-name-CCC-2",
+        "constituency": [
+            "CCC",
+            1
+        ]
+    },
+    {
+        "name": "rep-name-CCC-2",
+        "constituency": [
+            "CCC",
+            2
+        ]
     }
 ]
