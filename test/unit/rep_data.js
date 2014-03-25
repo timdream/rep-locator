@@ -5,7 +5,8 @@ var expected0 = {
     "constituency": [
         "AAA",
         1
-    ]
+    ],
+    "in_office": true
 };
 
 var expected1 = {
@@ -13,7 +14,8 @@ var expected1 = {
     "constituency": [
         "AAA",
         2
-    ]
+    ],
+    "in_office": true
 };
 
 var expected2 = {
@@ -21,7 +23,8 @@ var expected2 = {
     "constituency": [
         "BBB",
         0
-    ]
+    ],
+    "in_office": true
 };
 
 var expected3 = {
@@ -29,7 +32,8 @@ var expected3 = {
     "constituency": [
         "CCC",
         1
-    ]
+    ],
+    "in_office": true
 };
 
 var expected4 = {
@@ -37,7 +41,8 @@ var expected4 = {
     "constituency": [
         "CCC",
         2
-    ]
+    ],
+    "in_office": true
 };
 
 test('getRepByConstituency', function() {

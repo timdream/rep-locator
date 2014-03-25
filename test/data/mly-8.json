@@ -4,34 +4,47 @@
         "constituency": [
             "AAA",
             1
-        ]
+        ],
+        "in_office": true
+    },
+    {
+        "name": "rep-name-AAA-!in_office-1",
+        "constituency": [
+            "AAA",
+            1
+        ],
+        "in_office": false
     },
     {
         "name": "rep-name-AAA-2",
         "constituency": [
             "AAA",
             2
-        ]
+        ],
+        "in_office": true
     },
     {
         "name": "rep-name-BBB-2",
         "constituency": [
             "BBB",
             0
-        ]
+        ],
+        "in_office": true
     },
     {
         "name": "rep-name-CCC-2",
         "constituency": [
             "CCC",
             1
-        ]
+        ],
+        "in_office": true
     },
     {
         "name": "rep-name-CCC-2",
         "constituency": [
             "CCC",
             2
-        ]
+        ],
+        "in_office": true
     }
 ]

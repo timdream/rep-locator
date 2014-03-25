@@ -123,7 +123,8 @@
     }
 
     for (var i = 0; i < this.mly.length; i++) {
-      if (this.mly[i].constituency.join(',') === constituency) {
+      if (this.mly[i].constituency.join(',') === constituency &&
+          this.mly[i].in_office) {
         return this.mly[i];
       }
     }
