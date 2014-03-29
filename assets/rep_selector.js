@@ -63,8 +63,9 @@
   RepSelector.prototype.updateSelectorLocation = function(addressPrefix) {
     var addressComponents = addressPrefix.split(',');
 
-    if (addressComponents.length) {
-      window.document.title = this.titlePrefix + '：' + addressComponents.join('');
+    if (addressPrefix.length) {
+      window.document.title =
+        this.titlePrefix + '：' + addressComponents.join('');
     } else {
       window.document.title = this.titlePrefix;
     }
