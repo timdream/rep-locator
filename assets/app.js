@@ -55,8 +55,7 @@
   };
 
   RepLocator.prototype.handleEvent = function(evt) {
-    this.showRepFromHash();
-    this.updateSelectedFromHash();
+    this.updateLocationFromHash();
   };
 
   RepLocator.prototype.handleDataReady = function() {
@@ -64,27 +63,24 @@
     this.locationResolver.enableButton();
 
     if (window.location.hash.substr(1)) {
-      this.showRepFromHash();
-      this.updateSelectedFromHash();
+      this.updateLocationFromHash();
     }
 
     window.addEventListener('hashchange', this);
   };
 
   RepLocator.prototype.updateLocation = function(addressPrefix) {
-    var validAddressPrefix = this.data.getValidAddressPrefix(addressPrefix);
+    var validAddressPrefix =
+      this.data.getValidAddressPrefix(addressPrefix) || '';
     window.location.hash = '#' + window.encodeURI(validAddressPrefix);
   };
 
-  RepLocator.prototype.updateSelectedFromHash = function() {
+  RepLocator.prototype.updateLocationFromHash = function() {
     var addressPrefix = window.decodeURI(window.location.hash.substr(1));
-    this.repSelector.updateSelectorLocation(addressPrefix);
-  };
-
-  RepLocator.prototype.showRepFromHash = function() {
-    var addressPrefix = window.decodeURI(window.location.hash.substr(1));
-
-    this.repCard.showRepFromAddressPrefix(addressPrefix);
+    var validAddressPrefix =
+      this.data.getValidAddressPrefix(addressPrefix) || '';
+    this.repCard.showRepFromAddressPrefix(validAddressPrefix);
+    this.repSelector.updateSelectorLocation(validAddressPrefix);
   };
 
   exports.RepLocator = RepLocator;
