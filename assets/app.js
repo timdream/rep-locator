@@ -12,6 +12,8 @@
     this.repSelector = null;
   }
 
+  RepLocator.prototype.TITLE_ID = 'rep-locator-title';
+
   RepLocator.prototype.start = function() {
     if (this._started) {
       throw 'Instance should not be start()\'ed twice.';
@@ -30,6 +32,10 @@
 
     this.repSelector = new RepSelector(this);
     this.repSelector.start();
+
+    if (window.top !== window) {
+      $('#' + this.TITLE_ID).addClass('sr-only');
+    }
   };
 
   RepLocator.prototype.stop = function hb_stop() {
@@ -37,6 +43,8 @@
       throw 'Instance was never start()\'ed but stop() is called.';
     }
     this._started = false;
+
+    $('#' + this.TITLE_ID).removeClass('sr-only');
 
     window.removeEventListener('hashchange', this);
     this.$selectors = [];
