@@ -137,16 +137,45 @@
     var constituencyId = constituency.join(',');
     var localities = this.data.constituency[constituencyId];
 
-    var str = localities[0].split(',').join('');
+    var previousName = [];
+    var countSuffix = 0;
+    var titleStr = '';
+
+    var str = '';
     localities.forEach(function(locality, i) {
-      if (!i) {
+      var arr = locality.split(',');
+
+      if (arr[0] === previousName[0] &&
+          arr[1] === previousName[1]) {
+        if (!countSuffix) {
+          countSuffix++;
+          titleStr += previousName[2];
+        }
+        titleStr += '、' + arr[2];
+        countSuffix++;
+
         return;
       }
-      var arr = locality.split(',');
+
       // Don't repeat the top level name on each item.
-      arr.shift();
-      str += '、' + arr.join('');
+      if (arr[0] === previousName[0]) {
+        arr.shift();
+      }
+      if (arr[0] === previousName[1]) {
+        arr.shift();
+      }
+
+      if (!!i) {
+        str += '、';
+      }
+      str += arr.join('');
+
+      previousName = locality.split(',');
     });
+
+    if (countSuffix) {
+      str += '<abbr title="' + titleStr + '">等' + countSuffix + '里</abbr>';
+    }
 
     return str;
   };
