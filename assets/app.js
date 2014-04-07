@@ -14,6 +14,8 @@
 
   RepLocator.prototype.TITLE_ID = 'rep-locator-title';
 
+  RepLocator.prototype.USE_HASH_AS_STATE = true;
+
   RepLocator.prototype.start = function() {
     if (this._started) {
       throw 'Instance should not be start()\'ed twice.';
@@ -70,17 +72,24 @@
     this.repSelector.enableSelectors();
     this.locationResolver.enableButton();
 
-    if (window.location.hash.substr(1)) {
+    if (this.USE_HASH_AS_STATE && window.location.hash.substr(1)) {
       this.updateLocationFromHash();
     }
-
-    window.addEventListener('hashchange', this);
+    if (this.USE_HASH_AS_STATE) {
+      window.addEventListener('hashchange', this);
+    }
   };
 
   RepLocator.prototype.updateLocation = function(addressPrefix) {
     var validAddressPrefix =
       this.data.getValidAddressPrefix(addressPrefix) || '';
-    window.location.hash = '#' + window.encodeURI(validAddressPrefix);
+
+    if (this.USE_HASH_AS_STATE) {
+      window.location.hash = '#' + window.encodeURI(validAddressPrefix);
+    } else {
+      this.repCard.showRepFromAddressPrefix(validAddressPrefix);
+      this.repSelector.updateSelectorLocation(validAddressPrefix);
+    }
   };
 
   RepLocator.prototype.updateLocationFromHash = function() {
