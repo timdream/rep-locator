@@ -9,6 +9,9 @@
   LocationResolver.prototype.LOCATE_ME_BUTTON_ID = 'locate-me';
   LocationResolver.prototype.LOOKUP_URL = 'https://nominatim.openstreetmap.org/reverse?json_callback=?';
 
+  LocationResolver.prototype.DEBUG_OUTPUT = false;
+  LocationResolver.prototype.DEBUG_OUTPUT_ID = 'api-result';
+
   LocationResolver.prototype.start = function() {
     if (this._started) {
       throw 'Instance should not be start()\'ed twice.';
@@ -37,13 +40,29 @@
   LocationResolver.prototype.locateCurrentLocality = function() {
     this.$button.addClass('loading').prop('disabled', true);
 
+    if (this.DEBUG_OUTPUT) {
+      $('#' + this.DEBUG_OUTPUT_ID).empty();
+    }
+
     navigator.geolocation.getCurrentPosition(function success(pos) {
       if (!this._started) {
         return;
       }
 
+      if (this.DEBUG_OUTPUT) {
+        var debugText = JSON.stringify($.extend(true, {}, pos), null ,2);
+        $('#' + this.DEBUG_OUTPUT_ID)
+          .append($('<pre>').text('currentPosition: ' + debugText));
+      }
+
       this.lookupCoords(pos.coords);
-    }.bind(this), function error() {
+    }.bind(this), function error(err) {
+      if (this.DEBUG_OUTPUT) {
+        var debugText = JSON.stringify($.extend(true, {}, err), null ,2);
+        $('#' + this.DEBUG_OUTPUT_ID)
+          .append($('<pre>').text('currentPositionError: ' + debugText));
+      }
+
       this.$button.removeClass('loading').prop('disabled', false);
     }.bind(this), {
       timeout: 20 * 1E3
@@ -63,6 +82,12 @@
       }
 
       this.$button.removeClass('loading').prop('disabled', false);
+
+      if (this.DEBUG_OUTPUT) {
+        var debugText = JSON.stringify(data, null ,2);
+        $('#' + this.DEBUG_OUTPUT_ID)
+          .append($('<pre>').text('nominatim.openstreetmap.org: ' + debugText));
+      }
 
       if (!data || !data.address || data.address.country_code !== 'tw') {
         return;
