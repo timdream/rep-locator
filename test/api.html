@@ -108,8 +108,7 @@
         this.locationResolver.start();
         this.locationResolver.enableButton();
       };
-      APITest.prototype.updateLocation = function(addressPrefix) {
-        $('#api-result').append($('<pre>').text('address: ' + addressPrefix));
+      APITest.prototype.updateLocation = function() {
       };
       (new APITest()).start();
     });

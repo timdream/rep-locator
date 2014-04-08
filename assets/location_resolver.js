@@ -33,6 +33,22 @@
     this.$button.off('click').prop('disabled', true).removeClass('loading');
   };
 
+  LocationResolver.prototype._debug = function(tag, msg, needsDeepCopy) {
+    if (!this.DEBUG_OUTPUT) {
+      return;
+    }
+
+    if (needsDeepCopy && typeof msg === 'object') {
+      msg = $.extend(true, {}, msg);
+    }
+
+    var debugText = (typeof msg === 'object') ?
+      JSON.stringify(msg, null, 2) : msg;
+
+    $('#' + this.DEBUG_OUTPUT_ID)
+      .append($('<pre>').text(tag + ': ' + debugText));
+  };
+
   LocationResolver.prototype.enableButton = function() {
     this.$button.prop('disabled', false);
   };
@@ -49,19 +65,11 @@
         return;
       }
 
-      if (this.DEBUG_OUTPUT) {
-        var debugText = JSON.stringify($.extend(true, {}, pos), null ,2);
-        $('#' + this.DEBUG_OUTPUT_ID)
-          .append($('<pre>').text('currentPosition: ' + debugText));
-      }
+      this._debug('currentPosition', pos, true);
 
       this.lookupCoords(pos.coords);
     }.bind(this), function error(err) {
-      if (this.DEBUG_OUTPUT) {
-        var debugText = JSON.stringify($.extend(true, {}, err), null ,2);
-        $('#' + this.DEBUG_OUTPUT_ID)
-          .append($('<pre>').text('currentPositionError: ' + debugText));
-      }
+      this._debug('currentPosition', err, true);
 
       this.$button.removeClass('loading').prop('disabled', false);
     }.bind(this), {
@@ -83,11 +91,7 @@
 
       this.$button.removeClass('loading').prop('disabled', false);
 
-      if (this.DEBUG_OUTPUT) {
-        var debugText = JSON.stringify(data, null ,2);
-        $('#' + this.DEBUG_OUTPUT_ID)
-          .append($('<pre>').text('nominatim.openstreetmap.org: ' + debugText));
-      }
+      this._debug('nominatim.openstreetmap.org', data, false);
 
       if (!data || !data.address || data.address.country_code !== 'tw') {
         return;
@@ -103,8 +107,13 @@
           ',' + data.address.city_district;
       }
 
+      this._debug('address', addressPrefix);
+
       this.app.updateLocation(addressPrefix);
-    }.bind(this)).fail(function() {
+    }.bind(this)).fail(function(xhr, textStatus, errorThrown) {
+      this._debug('nominatim.openstreetmap.org error',
+        textStatus + ', ' + errorThrown);
+
       this.$button.removeClass('loading').prop('disabled', false);
     }.bind(this));
   };
