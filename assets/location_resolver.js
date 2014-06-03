@@ -97,14 +97,36 @@
         return;
       }
 
-      var addressPrefix = data.address.state || data.address.county;
-      if (data.address.state_district || data.address.city) {
-        addressPrefix +=
-          ',' + (data.address.state_district || data.address.city);
-      }
-      if (data.address.city_district) {
-        addressPrefix +=
-          ',' + data.address.city_district;
+      // See http://wiki.openstreetmap.org/wiki/WikiProject_Taiwan/Taiwan_tagging#Addresses_and_place_names_.5BProposed.5D
+      // for updates
+
+                   // 縣
+      var level1 = data.address.county ||
+                   // 直轄市、省轄市？
+                   data.address.city ||
+                   // 直轄市、省
+                   data.address.state || '';
+
+                   // 鄉鎮市
+      var level2 = data.address.town ||
+                   // 區
+                   data.address.suburb ||
+                   // 區？
+                   data.address.state_district ||
+                   // 縣轄市？
+                   ((data.address.city !== level1) ? data.address.city : '');
+
+                   // 村里
+      var level3 = data.address.village ||
+                   // 里？
+                   data.address.city_district || '';
+
+      var addressPrefix = level1;
+      if (level2) {
+        addressPrefix += ',' + level2;
+        if (level3) {
+          addressPrefix += ',' + level3;
+        }
       }
 
       this._debug('address', addressPrefix);
