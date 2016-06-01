@@ -87,45 +87,14 @@
       background: #ccc;
     }
   </style>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" defer></script>
-  <script type="text/javascript" src="assets/rep_data.js" defer></script>
-  <script type="text/javascript" src="assets/rep_card.js" defer></script>
-  <script type="text/javascript" src="assets/rep_selector.js" defer></script>
-  <script type="text/javascript" src="assets/location_resolver.js" defer></script>
-  <script type="text/javascript" src="assets/app.js" defer></script>
-  <script type="text/javascript" src="assets/start.js" defer></script>
 </head>
 <body>
   <div class="container">
     <div class="page-header">
       <h1 id="rep-locator-title" class="text-center">投完票就忘了？<small>立刻尋找您的選區立委</small></h1>
     </div>
-    <form class="form-inline" role="form">
-      <p class="text-center">
-        <span class="form-group">
-          <label class="sr-only" for="address-selector0">縣市</label>
-          <select id="address-selector0" disabled class="address-selector form-control input-lg" title="縣市"></select>
-        </span>
-        <span class="form-group">
-          <label class="sr-only" for="address-selector1">鄉鎮市區</label>
-          <select id="address-selector1" disabled class="address-selector form-control input-lg" title="鄉鎮市區"></select>
-        </span>
-        <span class="form-group">
-          <label class="sr-only" for="address-selector2">村里</label>
-          <select id="address-selector2" disabled class="address-selector form-control input-lg" title="村里"></select>
-        </span>
-      </p>
-    </form>
-
-    <p id="locate-me-block" class="text-center"><button class="btn btn-info btn-lg" id="locate-me" disabled>定位所在位置<span id="looking-up-location" class="glyphicon glyphicon-refresh"></span></button></p>
-
-    <div id="reps"></div>
-    <hr />
-    <footer class="text-center">
-      <p><a target="_blank" href="http://vote.ly.g0v.tw/legislator/district/">完整立委清單（含非區域立委）</a></p>
-      <p>原始資料來源：<a target="_blank" href="http://g0v.tw/">g0v.tw</a>、<a target="_blank" href="https://zh.wikipedia.org/zh-tw/2012%E5%B9%B4%E4%B8%AD%E8%8F%AF%E6%B0%91%E5%9C%8B%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1%E9%81%B8%E8%88%89#.E9.81.B8.E8.88.89.E5.8D.80.E5.8A.83.E5.88.86.E8.88.87.E5.90.8D.E7.A8.B1.E8.AE.8A.E6.9B.B4">維基百科</a>。</p>
-      <p>地理定位使用 <a target="_blank" href="http://www.openstreetmap.org/">OpenStreetMap</a>。<a href="https://github.com/timdream/rep-locator">程式碼</a>。</p>
-    </footer>
-  </div>
+    <div class="alert alert-danger" role="alert">
+      <p>網站已暫時下架，因為需要第九屆立委的資訊。<a href="https://github.com/timdream/rep-locator">歡迎幫忙改版</a>！</p>
+    </div>
 </body>
 </html>
